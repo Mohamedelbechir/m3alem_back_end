@@ -1,4 +1,5 @@
 package com.m3alem.m3alem_back_end.models;
+
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
@@ -13,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -33,7 +35,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class Utilisateur {
     @Id
-    private String cin;
+    private long cin;
 
     @NotNull
     private String nom;
@@ -41,10 +43,9 @@ public class Utilisateur {
     @NotNull
     private String prenom;
 
-    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateNaissance;
 
     private String tel;
@@ -55,39 +56,69 @@ public class Utilisateur {
     private String password;
 
     @NotEmpty
-    private String typeUtilisateur; 
+    private String typeUtilisateur;
     private String etatInscription;
     private String etatCompte;
-    
-    @NotNull
+
     @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private Date dateDemande;
 
-    public Utilisateur(String cin, @NotNull String nom, @NotNull String prenom, @NotNull Date dateNaissance, String tel,
-            String adresse, String sexe, String password, @NotEmpty String typeUtilisateur, String etatInscription,
-            String etatCompte, @NotNull Date dateDemande, @NotEmpty String email) {
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] photoPermis;
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] photoAssurance;
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] photoCarteGrise;
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] photoPhotoExterieur;
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] photoPieceIdentite;
+    @Lob
+    @Column(columnDefinition="LONGBLOB")
+    private byte[] photoIdentite;
+
+
+    public Utilisateur() {
+        super();
+    }
+
+    public Utilisateur(long cin, @NotNull String nom, @NotNull String prenom, Date dateNaissance, String tel,
+            String adresse, @NotEmpty String email, String sexe, String password, @NotEmpty String typeUtilisateur,
+            String etatInscription, String etatCompte, Date dateDemande, byte[] photoPermis, byte[] photoAssurance,
+            byte[] photoCarteGrise, byte[] photoPhotoExterieur, byte[] photoPieceIdentite, byte[] photoIdentite) {
         this.cin = cin;
         this.nom = nom;
         this.prenom = prenom;
         this.dateNaissance = dateNaissance;
         this.tel = tel;
         this.adresse = adresse;
+        this.email = email;
         this.sexe = sexe;
         this.password = password;
         this.typeUtilisateur = typeUtilisateur;
         this.etatInscription = etatInscription;
         this.etatCompte = etatCompte;
         this.dateDemande = dateDemande;
-        this.email = email;
+        this.photoPermis = photoPermis;
+        this.photoAssurance = photoAssurance;
+        this.photoCarteGrise = photoCarteGrise;
+        this.photoPhotoExterieur = photoPhotoExterieur;
+        this.photoPieceIdentite = photoPieceIdentite;
+        this.photoIdentite = photoIdentite;
     }
 
-    public String getCin() {
+    public long getCin() {
         return cin;
     }
 
-    public void setCin(String cin) {
+    public void setCin(long cin) {
         this.cin = cin;
     }
 
@@ -129,6 +160,14 @@ public class Utilisateur {
 
     public void setAdresse(String adresse) {
         this.adresse = adresse;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getSexe() {
@@ -179,15 +218,53 @@ public class Utilisateur {
         this.dateDemande = dateDemande;
     }
 
-    public String getEmail() {
-        return email;
+    public byte[] getPhotoPermis() {
+        return photoPermis;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setPhotoPermis(byte[] photoPermis) {
+        this.photoPermis = photoPermis;
     }
 
+    public byte[] getPhotoAssurance() {
+        return photoAssurance;
+    }
+
+    public void setPhotoAssurance(byte[] photoAssurance) {
+        this.photoAssurance = photoAssurance;
+    }
+
+    public byte[] getPhotoCarteGrise() {
+        return photoCarteGrise;
+    }
+
+    public void setPhotoCarteGrise(byte[] photoCarteGrise) {
+        this.photoCarteGrise = photoCarteGrise;
+    }
+
+    public byte[] getPhotoPhotoExterieur() {
+        return photoPhotoExterieur;
+    }
+
+    public void setPhotoPhotoExterieur(byte[] photoPhotoExterieur) {
+        this.photoPhotoExterieur = photoPhotoExterieur;
+    }
+
+    public byte[] getPhotoPieceIdentite() {
+        return photoPieceIdentite;
+    }
+
+    public void setPhotoPieceIdentite(byte[] photoPieceIdentite) {
+        this.photoPieceIdentite = photoPieceIdentite;
+    }
+
+    public byte[] getPhotoIdentite() {
+        return photoIdentite;
+    }
+
+    public void setPhotoIdentite(byte[] photoIdentite) {
+        this.photoIdentite = photoIdentite;
+    }
     
 
-    
 }
