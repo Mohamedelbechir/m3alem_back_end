@@ -7,6 +7,8 @@ import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.m3alem.m3alem_back_end.daos.UtilisateurDao;
 import com.m3alem.m3alem_back_end.exceptions.AuthentificationException;
@@ -53,6 +55,22 @@ public class UtilisateurController {
          */
         return new ResponseEntity<String>("received " + myfile.getOriginalFilename(), HttpStatus.OK);
 
+    }
+
+    @PostMapping(value = "/utilisateurs/online/{cin}/{status}")
+    private ResponseEntity<Map<String, Boolean>> setOnLine(@PathVariable final long cin,
+            @PathVariable final boolean status) {
+
+        final Utilisateur currentUtilisateur = utilisateurDao.findById(cin);
+        Map<String, Boolean> response = new HashMap<String, Boolean>();
+        if (currentUtilisateur == null) {
+            return new ResponseEntity<Map<String, Boolean>>(HttpStatus.NOT_FOUND);
+        }
+        currentUtilisateur.setIsOnLine(status);
+        utilisateurDao.save(currentUtilisateur);
+
+        response.put("resultat", status);
+        return new ResponseEntity<Map<String, Boolean>>(response, HttpStatus.OK);
     }
 
     /*
@@ -213,6 +231,7 @@ public class UtilisateurController {
         if (currentUtilisateur == null) {
             return new ResponseEntity<Utilisateur>(HttpStatus.NOT_FOUND);
         }
+    
         currentUtilisateur.setAdresse(utilisateur.getAdresse());
         currentUtilisateur.setCin(utilisateur.getCin());
         currentUtilisateur.setDateNaissance(utilisateur.getDateNaissance());

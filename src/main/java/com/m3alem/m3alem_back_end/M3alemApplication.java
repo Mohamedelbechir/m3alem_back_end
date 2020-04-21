@@ -11,8 +11,12 @@ public class M3alemApplication implements WebMvcConfigurer {
 	public static void main(String[] args) {
 		SpringApplication.run(M3alemApplication.class, args);
 	}
+
 	@Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-    }
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**")
+				// registry.addMapping("/api/**")
+				.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
+				.allowedHeaders("Origin", "Accept", "Content-Type", "Authorization").exposedHeaders("Authorization");
+	}
 }
