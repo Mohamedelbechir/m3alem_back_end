@@ -177,7 +177,7 @@ public class UtilisateurController {
     }
 
     @PostMapping(value = "/utilisateurs")
-    public ResponseEntity<Utilisateur> ajouterElection(@RequestBody final Utilisateur utilisateur
+    public ResponseEntity<Utilisateur> addUser(@RequestBody final Utilisateur utilisateur
     /* @RequestParam("mySingleFile") final MultipartFile file */) throws Exception {
         try {
             /*
@@ -212,10 +212,17 @@ public class UtilisateurController {
     }
 
     @GetMapping(value = "/utilisateurs")
-    public ResponseEntity<Iterable<Utilisateur>> getUtilisateurs() {
+    public ResponseEntity<Iterable<Utilisateur>> getUsers() {
         final Iterable<Utilisateur> utilisateurs = utilisateurDao.findAll();
 
         return new ResponseEntity<Iterable<Utilisateur>>(utilisateurs, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/utilisateurs/{cin}")
+    public ResponseEntity<Utilisateur> getUser(@PathVariable long cin) {
+        Utilisateur utilisateur = utilisateurDao.findById(cin);
+
+        return new ResponseEntity<Utilisateur>(utilisateur, HttpStatus.OK);
     }
 
     @CrossOrigin(origins = "http://localhost:4200")
@@ -231,7 +238,7 @@ public class UtilisateurController {
         if (currentUtilisateur == null) {
             return new ResponseEntity<Utilisateur>(HttpStatus.NOT_FOUND);
         }
-    
+
         currentUtilisateur.setAdresse(utilisateur.getAdresse());
         currentUtilisateur.setCin(utilisateur.getCin());
         currentUtilisateur.setDateNaissance(utilisateur.getDateNaissance());
