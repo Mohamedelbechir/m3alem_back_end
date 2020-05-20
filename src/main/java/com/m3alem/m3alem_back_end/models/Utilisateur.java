@@ -1,10 +1,13 @@
 package com.m3alem.m3alem_back_end.models;
 
 import java.util.Date;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
@@ -13,6 +16,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
@@ -63,6 +68,13 @@ public class Utilisateur {
     
     @Column( nullable = false,columnDefinition = "boolean default false")
     private Boolean  isOnLine;
+
+    @OneToMany
+    private Set<Avis> avis;
+
+    @OneToOne
+    private CarteCredit carteCredit;
+
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")

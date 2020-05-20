@@ -30,25 +30,27 @@ public class Avis {
     private Long id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_driver", nullable = false)
+   @ManyToOne
+   //@JoinColumn(name = "id_driver", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+  /*  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("idDriver")
+    @JsonProperty("idDriver")*/
     private Utilisateur driver;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "id_passager", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ManyToOne    
+   @OnDelete(action = OnDeleteAction.CASCADE)
+  //  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // @JoinColumn(name = "id_passager", nullable = false)
+    
+   /* @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("idPassager")
+    @JsonProperty("idPassager")*/
     private Utilisateur passager;
 
-    @Column( nullable = false,columnDefinition = "interger default 0")
-    private Integer nbEtoile;
-    private String message;
+    // @Column( nullable = false,columnDefinition = "integer default 0")
+    private Integer nbEtoile = 0;
+    private String message ;
 
 }

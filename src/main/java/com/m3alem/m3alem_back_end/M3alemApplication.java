@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @SpringBootApplication
 public class M3alemApplication implements WebMvcConfigurer {
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		SpringApplication.run(M3alemApplication.class, args);
 	}
 
@@ -17,6 +17,7 @@ public class M3alemApplication implements WebMvcConfigurer {
 		registry.addMapping("/**")
 				// registry.addMapping("/api/**")
 				.allowedMethods("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
-				.allowedHeaders("Origin", "Accept", "Content-Type", "Authorization").exposedHeaders("Authorization");
+				.allowedHeaders("Origin", "Accept", "Content-Type", "Authorization")
+				.exposedHeaders("Authorization");
 	}
 }

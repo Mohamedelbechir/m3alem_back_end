@@ -1,5 +1,6 @@
 package com.m3alem.m3alem_back_end.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Entity;
@@ -24,33 +25,39 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Entity
 @Data
+@AllArgsConstructor
 public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
-    @Temporal(TemporalType.TIMESTAMP)
+   /* @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date dateCourse;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")*/
+    private LocalDateTime dateCourse;
 
     private Double distance;
 
     private Double prixCourse;
     @NotBlank
-    private String depart; // concatenation de laltitude et longitude avec <<;>>
+    private String latLngDepart; // concatenation de laltitude et longitude avec <<;>>
+    @NotBlank
+    private String latLngArrivee; // concatenation de laltitude et longitude avec <<;>>
+    @NotBlank
+    private String depart; // chaine du nom de lieu
     @NotBlank
     private String arrivee;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_driver")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "cin")
     @JsonIdentityReference(alwaysAsId = true)
     @JsonProperty("idDriver")
     private Utilisateur driver;
@@ -58,16 +65,16 @@ public class Course {
     @ManyToOne(fetch = FetchType.LAZY /* optional = false */)
     @JoinColumn(name = "id_passager")
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+   // @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     /*
      * Pour vous assurer que le project id sera correctement inclus en tant que
      * propriété de course pendant la sérialisation, ajoutez l' annotation
      */
-    @JsonIdentityReference(alwaysAsId = true)
+  //  @JsonIdentityReference(alwaysAsId = true)
     /*
      * Pour aider à désérialiser taskcorrectement l' obje
      */
-    @JsonProperty("idPassager")
+   // @JsonProperty("idPassager")
     private Utilisateur passager;
 
 }
