@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UtilisateurDao  extends JpaRepository<Utilisateur, Long>{
 
-    Utilisateur findByCinAndPassword(long cin, String password);
+    Utilisateur findByCinAndPassword(Long cin, String password);
     Utilisateur findById(long id);
 	//void update(Utilisateur currentUtilisateur);
      

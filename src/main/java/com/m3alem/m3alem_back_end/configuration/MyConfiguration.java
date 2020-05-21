@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Configuration;
 // @Configuration
 @SpringBootConfiguration
 public class MyConfiguration {
-    @Bean
+   /* @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
-    }
+    }*/
 }

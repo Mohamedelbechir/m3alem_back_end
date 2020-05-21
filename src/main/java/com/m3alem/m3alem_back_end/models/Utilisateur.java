@@ -1,5 +1,6 @@
 package com.m3alem.m3alem_back_end.models;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 import javax.persistence.Column;
@@ -42,10 +43,11 @@ public class Utilisateur {
     @NotNull
     private String prenom;
 
-    @Temporal(TemporalType.TIMESTAMP)
+   /* @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date dateNaissance;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")*/
+    private LocalDateTime dateNaissance;
+    // private Date dateNaissance;
 
     private String tel;
     private String adresse;
@@ -60,14 +62,13 @@ public class Utilisateur {
     private String etatInscription;
     private String etatCompte;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private Date dateDemande;
+    //@Temporal(TemporalType.TIMESTAMP)
+    /*@DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")*/
+    private LocalDateTime dateDemande =  LocalDateTime.now();    
     
-    
-    @Column( nullable = false,columnDefinition = "boolean default false")
-    private Boolean  isOnLine;
+    // @Column( nullable = false,columnDefinition = "boolean default false")
+    private Boolean  isOnLine = false;
 
     @OneToMany
     private Set<Avis> avis;

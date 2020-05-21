@@ -11,8 +11,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.m3alem.m3alem_back_end.daos.UtilisateurDao;
+import com.m3alem.m3alem_back_end.dto.UtilisateurInputDTO;
+import com.m3alem.m3alem_back_end.dto.UtilisateurListingDTO;
 import com.m3alem.m3alem_back_end.exceptions.AuthentificationException;
+import com.m3alem.m3alem_back_end.exceptions.UserExistException;
 import com.m3alem.m3alem_back_end.models.Utilisateur;
+import com.m3alem.m3alem_back_end.service.UtilisateurService;
 import com.m3alem.utils.CodeImage;
 
 import org.apache.commons.io.IOUtils;
@@ -42,6 +46,8 @@ public class UtilisateurController {
 
     @Autowired
     private UtilisateurDao utilisateurDao;
+    @Autowired
+    private UtilisateurService utilisateurService;
 
     @RequestMapping(value = "/multipart", method = RequestMethod.POST)
     @ResponseBody
@@ -173,96 +179,42 @@ public class UtilisateurController {
             e.printStackTrace();
             return new ResponseEntity<String>("", HttpStatus.NOT_FOUND);
         }
-        // throw new RuntimeException("oops!");
     }
 
     @PostMapping(value = "/utilisateurs")
-    public ResponseEntity<Utilisateur> addUser(@RequestBody final Utilisateur utilisateur
-    /* @RequestParam("mySingleFile") final MultipartFile file */) throws Exception {
+    public ResponseEntity<UtilisateurListingDTO> addUser(@RequestBody final UtilisateurInputDTO utilisateur)
+            throws UserExistException {
         try {
-            /*
-             * final File convertFile = new File(getClass().getResource("/images") +
-             * file.getOriginalFilename()); convertFile.createNewFile(); final
-             * FileOutputStream fout = new FileOutputStream(convertFile);
-             * fout.write(file.getBytes()); fout.close();
-             */
-            final Utilisateur utilisateurAdded = utilisateurDao.save(utilisateur);
-
-            if (utilisateurAdded == null)
-                return ResponseEntity.noContent().build();
-
-            // URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-            // .buildAndExpand(electionAdded.getId()).toUri();
-            return new ResponseEntity<Utilisateur>(utilisateurAdded, HttpStatus.CREATED);
-
-        } catch (final Exception e) {
+            final UtilisateurListingDTO utilisateurAdded = utilisateurService.save(utilisateur);
+            return new ResponseEntity<UtilisateurListingDTO>(utilisateurAdded, HttpStatus.CREATED);
+        } catch (UserExistException e) {
             throw e;
         }
 
     }
 
     @GetMapping(value = "/login/{cin}/{password}")
-    public ResponseEntity<Utilisateur> login(@PathVariable final long cin, @PathVariable final String password)
-            throws AuthentificationException {
-        final Utilisateur utilisateur = utilisateurDao.findByCinAndPassword(cin, password);
-        if (utilisateur == null)
-            throw new AuthentificationException("Utilisateur avec le cin : " + cin + " est introuvable");
+    public ResponseEntity<UtilisateurListingDTO> login(@PathVariable final long cin,
+            @PathVariable final String password) throws AuthentificationException {
 
-        return new ResponseEntity<Utilisateur>(utilisateur, HttpStatus.OK);
+        final UtilisateurListingDTO utilisateur = utilisateurService.login(cin, password);
+        return new ResponseEntity<UtilisateurListingDTO>(utilisateur, HttpStatus.OK);
     }
 
     @GetMapping(value = "/utilisateurs")
-    public ResponseEntity<Iterable<Utilisateur>> getUsers() {
-        final Iterable<Utilisateur> utilisateurs = utilisateurDao.findAll();
+    public ResponseEntity<Iterable<UtilisateurListingDTO>> getUsers() {
+        final Iterable<UtilisateurListingDTO> utilisateurs = utilisateurService.findAll();
 
-        return new ResponseEntity<Iterable<Utilisateur>>(utilisateurs, HttpStatus.OK);
+        return new ResponseEntity<Iterable<UtilisateurListingDTO>>(utilisateurs, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/utilisateurs/{cin}")
-    public ResponseEntity<Utilisateur> getUser(@PathVariable long cin) {
-        Utilisateur utilisateur = utilisateurDao.findById(cin);
-
-        return new ResponseEntity<Utilisateur>(utilisateur, HttpStatus.OK);
-    }
-
-    @CrossOrigin(origins = "http://localhost:4200")
+    // @CrossOrigin(origins = "http://localhost:4200")
     @PutMapping(value = "utilisateurs/{id}")
-    public ResponseEntity<Utilisateur> update(@PathVariable final String id,
-            @RequestBody final Utilisateur utilisateur) {
+    public ResponseEntity<UtilisateurListingDTO> update(@PathVariable final Long id,
+            @RequestBody final UtilisateurInputDTO utilisateur) {
 
-        final HttpHeaders headers = new HttpHeaders();
-        if (utilisateur == null) {
-            return new ResponseEntity<Utilisateur>(headers, HttpStatus.BAD_REQUEST);
-        }
-        final Utilisateur currentUtilisateur = this.utilisateurDao.findById(Long.parseLong(id));
-        if (currentUtilisateur == null) {
-            return new ResponseEntity<Utilisateur>(HttpStatus.NOT_FOUND);
-        }
-
-        currentUtilisateur.setAdresse(utilisateur.getAdresse());
-        currentUtilisateur.setCin(utilisateur.getCin());
-        currentUtilisateur.setDateNaissance(utilisateur.getDateNaissance());
-        currentUtilisateur.setDateDemande(utilisateur.getDateDemande());
-        currentUtilisateur.setEmail(utilisateur.getEmail());
-        currentUtilisateur.setEtatCompte(utilisateur.getEtatCompte());
-        currentUtilisateur.setEtatInscription(utilisateur.getEtatInscription());
-        currentUtilisateur.setNom(utilisateur.getNom());
-        currentUtilisateur.setPassword(utilisateur.getPassword());
-        currentUtilisateur.setPrenom(utilisateur.getPrenom());
-        currentUtilisateur.setSexe(utilisateur.getSexe());
-        currentUtilisateur.setTel(utilisateur.getTel());
-        currentUtilisateur.setTypeUtilisateur(utilisateur.getTypeUtilisateur());
-        currentUtilisateur.setTypeUtilisateur(utilisateur.getTypeUtilisateur());
-
-        /*
-         * currentUtilisateur.clearElections();
-         * 
-         * for(Election elect : utilisateur.getElections()) {
-         * currentUtilisateur.addElection(elect); }
-         */
-        this.utilisateurDao.save(currentUtilisateur);
-
-        return new ResponseEntity<Utilisateur>(currentUtilisateur, HttpStatus.OK);
+        UtilisateurListingDTO currentUtilisateur = utilisateurService.update(id, utilisateur);
+        return new ResponseEntity<UtilisateurListingDTO>(currentUtilisateur, HttpStatus.OK);
     }
 
 }
