@@ -1,8 +1,12 @@
 package com.m3alem.m3alem_back_end.models;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -26,31 +30,19 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Avis {
 
-    @Id
-    private Long id;
-
-    @NotNull
-   @ManyToOne
-   //@JoinColumn(name = "id_driver", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-  /*  @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("idDriver")*/
-    private Utilisateur driver;
-
-    @NotNull
-    @ManyToOne    
-   @OnDelete(action = OnDeleteAction.CASCADE)
-  //  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    // @JoinColumn(name = "id_passager", nullable = false)
-    
-   /* @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-    @JsonIdentityReference(alwaysAsId = true)
-    @JsonProperty("idPassager")*/
-    private Utilisateur passager;
-
-    // @Column( nullable = false,columnDefinition = "integer default 0")
-    private Integer nbEtoile = 0;
-    private String message ;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private Long id;
+  
+  @ManyToOne
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private Utilisateur driver;
+  
+  @ManyToOne
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private Utilisateur passager;
+  private Integer nbEtoile = 0;
+  private String message;
+  private LocalDateTime dateAvis = LocalDateTime.now();
 
 }

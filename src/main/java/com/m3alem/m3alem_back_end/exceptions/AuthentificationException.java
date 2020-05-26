@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
  * AuthentificationException
  */
 @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-public class AuthentificationException extends RuntimeException{
+public class AuthentificationException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
 
-    public AuthentificationException(String message)
-    {
+    public AuthentificationException(String message) {
         super(message);
     }
 }

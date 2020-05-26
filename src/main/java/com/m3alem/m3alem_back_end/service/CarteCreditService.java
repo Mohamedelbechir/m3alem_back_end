@@ -30,7 +30,7 @@ public class CarteCreditService {
     }
 
     private CarteCreditListingDTO getListingDTO(CarteCredit entity) {
-        return new CarteCreditListingDTO(entity.getId(), entity.getCardNumber(), entity.getExpiryDate(), entity.getCardHolderName(),
-                entity.getCodeInternet(), entity.getUtilisateur().getCin());
+        return new CarteCreditListingDTO(entity.getId(), entity.getCardNumber(), entity.getExpiryDate(),
+                entity.getCardHolderName(), entity.getCodeInternet(), entity.getUtilisateur().getCin());
     }
 }

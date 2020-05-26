@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.m3alem.m3alem_back_end.daos.UtilisateurDao;
+import com.m3alem.m3alem_back_end.dto.DriverListingDTO;
 import com.m3alem.m3alem_back_end.dto.UtilisateurInputDTO;
 import com.m3alem.m3alem_back_end.dto.UtilisateurListingDTO;
 import com.m3alem.m3alem_back_end.exceptions.AuthentificationException;
@@ -206,6 +207,12 @@ public class UtilisateurController {
         final Iterable<UtilisateurListingDTO> utilisateurs = utilisateurService.findAll();
 
         return new ResponseEntity<Iterable<UtilisateurListingDTO>>(utilisateurs, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/drivers")
+    public ResponseEntity<Iterable<DriverListingDTO>> getDrivers() {
+        final Iterable<DriverListingDTO> utilisateurs = utilisateurService.findDrivers();
+        return new ResponseEntity<Iterable<DriverListingDTO>>(utilisateurs, HttpStatus.OK);
     }
 
     // @CrossOrigin(origins = "http://localhost:4200")

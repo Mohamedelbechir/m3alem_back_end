@@ -82,7 +82,7 @@ public class CourseController {
     }
 
     @GetMapping(value = "/courses")
-    public ResponseEntity<Iterable<Course>> getUtilisateurs() {
+    public ResponseEntity<Iterable<Course>> findAll() {
         final Iterable<Course> utilisateurs = courseDao.findAll();
 
         return new ResponseEntity<Iterable<Course>>(utilisateurs, HttpStatus.OK);

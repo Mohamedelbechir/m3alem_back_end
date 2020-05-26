@@ -1,16 +1,19 @@
 package com.m3alem.m3alem_back_end.service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
 import com.m3alem.m3alem_back_end.daos.UtilisateurDao;
+import com.m3alem.m3alem_back_end.dto.DriverListingDTO;
 import com.m3alem.m3alem_back_end.dto.UtilisateurInputDTO;
 import com.m3alem.m3alem_back_end.dto.UtilisateurListingDTO;
 import com.m3alem.m3alem_back_end.exceptions.AuthentificationException;
 import com.m3alem.m3alem_back_end.exceptions.UserExistException;
 import com.m3alem.m3alem_back_end.exceptions.UserNotFoundException;
 import com.m3alem.m3alem_back_end.models.Utilisateur;
+import com.m3alem.utils.TypeUtilisateur;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.expression.ParseException;
@@ -55,14 +58,21 @@ public class UtilisateurService {
 
     }
 
+    public Iterable<DriverListingDTO> findDrivers() {
+        List<Utilisateur> drivers = utilisateurDao.findBytypeUtilisateur(TypeUtilisateur.chauffeur);
+        return drivers.stream().map(this::convertToDrivreListingDto).collect(Collectors.toList());
+    }
+
     private Utilisateur convertToEntity(UtilisateurInputDTO dto) throws ParseException {
-        Utilisateur entity = modelMapper.map(dto, Utilisateur.class);
-        return entity;
+        return modelMapper.map(dto, Utilisateur.class);
     }
 
     private UtilisateurListingDTO convertToDto(Utilisateur entity) {
-        UtilisateurListingDTO dto = modelMapper.map(entity, UtilisateurListingDTO.class);
-        return dto;
+        return modelMapper.map(entity, UtilisateurListingDTO.class);
+    }
+
+    private DriverListingDTO convertToDrivreListingDto(Utilisateur entity) {
+        return modelMapper.map(entity, DriverListingDTO.class);
     }
 
 }
