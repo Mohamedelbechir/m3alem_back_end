@@ -1,11 +1,6 @@
 package com.m3alem.m3alem_back_end.controllers;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FilterOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,16 +15,9 @@ import com.m3alem.m3alem_back_end.models.Utilisateur;
 import com.m3alem.m3alem_back_end.service.UtilisateurService;
 import com.m3alem.utils.CodeImage;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.InputStreamResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -65,10 +53,10 @@ public class UtilisateurController {
     }
 
     @PostMapping(value = "/utilisateurs/online/{cin}/{status}")
-    private ResponseEntity<Map<String, Boolean>> setOnLine(@PathVariable final long cin,
+    private ResponseEntity<Map<String, Boolean>> setOnLine(@PathVariable final Long cin,
             @PathVariable final boolean status) {
 
-        final Utilisateur currentUtilisateur = utilisateurDao.findById(cin);
+        final Utilisateur currentUtilisateur = utilisateurDao.findById(cin).get();
         Map<String, Boolean> response = new HashMap<String, Boolean>();
         if (currentUtilisateur == null) {
             return new ResponseEntity<Map<String, Boolean>>(HttpStatus.NOT_FOUND);
@@ -95,10 +83,10 @@ public class UtilisateurController {
      * }
      */
     @PutMapping(value = "/utilisateurs/photos/{cin}/{codePhoto}", consumes = { "multipart/form-data" })
-    public ResponseEntity<HttpStatus> uploadSingleFile(@PathVariable final long cin,
+    public ResponseEntity<HttpStatus> uploadSingleFile(@PathVariable final Long cin,
             @PathVariable final String codePhoto, @RequestPart("file") final MultipartFile file) {
         try {
-            Utilisateur currentUtilisateur = utilisateurDao.findById(cin);
+            Utilisateur currentUtilisateur = utilisateurDao.findById(cin).get();
             if (currentUtilisateur == null)
                 return new ResponseEntity<HttpStatus>(HttpStatus.NOT_FOUND);
             switch (codePhoto) {
@@ -140,7 +128,7 @@ public class UtilisateurController {
             /*
              * Aller chercher l'utilisateur correspondant
              */
-            Utilisateur utilisateur = utilisateurDao.findById(cin);
+            Utilisateur utilisateur = utilisateurDao.findById(cin).get();
             String encodedImage = "";
             switch (imageCode) {
                 case CodeImage.PHOTO_PERMIS:
@@ -195,17 +183,15 @@ public class UtilisateurController {
     }
 
     @GetMapping(value = "/login/{cin}/{password}")
-    public ResponseEntity<UtilisateurListingDTO> login(@PathVariable final long cin,
-            @PathVariable final String password) throws AuthentificationException {
-
-        final UtilisateurListingDTO utilisateur = utilisateurService.login(cin, password);
-        return new ResponseEntity<UtilisateurListingDTO>(utilisateur, HttpStatus.OK);
+    public ResponseEntity<Utilisateur> login(@PathVariable final long cin, @PathVariable final String password)
+            throws AuthentificationException {
+        final Utilisateur utilisateur = utilisateurService.login(cin, password);
+        return new ResponseEntity<Utilisateur>(utilisateur, HttpStatus.OK);
     }
 
     @GetMapping(value = "/utilisateurs")
     public ResponseEntity<Iterable<UtilisateurListingDTO>> getUsers() {
         final Iterable<UtilisateurListingDTO> utilisateurs = utilisateurService.findAll();
-
         return new ResponseEntity<Iterable<UtilisateurListingDTO>>(utilisateurs, HttpStatus.OK);
     }
 
@@ -215,11 +201,17 @@ public class UtilisateurController {
         return new ResponseEntity<Iterable<DriverListingDTO>>(utilisateurs, HttpStatus.OK);
     }
 
+    @PutMapping(value = "drivers")
+    public ResponseEntity<DriverListingDTO> updateDriver(@RequestBody final DriverListingDTO driverListingDTO) {
+        DriverListingDTO currentUtilisateur = utilisateurService.update(driverListingDTO);
+        return new ResponseEntity<DriverListingDTO>(currentUtilisateur, HttpStatus.OK);
+    }
+
     // @CrossOrigin(origins = "http://localhost:4200")
+
     @PutMapping(value = "utilisateurs/{id}")
     public ResponseEntity<UtilisateurListingDTO> update(@PathVariable final Long id,
             @RequestBody final UtilisateurInputDTO utilisateur) {
-
         UtilisateurListingDTO currentUtilisateur = utilisateurService.update(id, utilisateur);
         return new ResponseEntity<UtilisateurListingDTO>(currentUtilisateur, HttpStatus.OK);
     }

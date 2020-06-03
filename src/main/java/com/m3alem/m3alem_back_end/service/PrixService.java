@@ -8,10 +8,8 @@ import com.m3alem.m3alem_back_end.models.Prix;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
-import javassist.NotFoundException;
 import lombok.AllArgsConstructor;
 
 @Service

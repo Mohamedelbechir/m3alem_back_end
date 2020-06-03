@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AvisInputDTO {
-
     @NotNull
     private Long idDriver;
     @NotNull

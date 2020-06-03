@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CarteCreditInputDTO {
-
     private String cardNumber;
     private String expiryDate;
     private String cardHolderName;

@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -17,6 +15,7 @@ import com.m3alem.m3alem_back_end.daos.UtilisateurDao;
 import com.m3alem.m3alem_back_end.dto.CourseInputDTO;
 import com.m3alem.m3alem_back_end.dto.CourseListingDTO;
 import com.m3alem.m3alem_back_end.dto.DriverOnLineListingDTO;
+import com.m3alem.m3alem_back_end.dto.HistoriqueCourseDTO;
 import com.m3alem.m3alem_back_end.exceptions.UserNotFoundException;
 import com.m3alem.m3alem_back_end.models.Avis;
 import com.m3alem.m3alem_back_end.models.Course;
@@ -33,26 +32,44 @@ public class CourseService {
 
     /*
      * public List<CourseListingDTO> findAll() { return
-     * courseDao.findAll().stream().map(this::getListingDTO).collect(Collectors. toList()); }
+     * courseDao.findAll().stream().map(this::getListingDTO).collect(Collectors.
+     * toList()); }
      */
 
     @Transactional
     public CourseListingDTO save(CourseInputDTO entity) {
-        Course course = new Course(null, LocalDateTime.now(), entity.getDistance(),
-                entity.getPrixCourse(), entity.getLatLngDepart(), entity.getLatLngArrivee(),
-                entity.getDepart(), entity.getArrivee(),
-                utilisateurDao.findById(entity.getIdDriver())
-                        .orElseThrow(UserNotFoundException::new),
-                utilisateurDao.findById(entity.getIdPassager())
-                        .orElseThrow(UserNotFoundException::new));
+        Course course = new Course(null, LocalDateTime.now(), entity.getDistance(), entity.getPrixCourse(),
+                entity.getLatLngDepart(), entity.getLatLngArrivee(), entity.getDepart(), entity.getArrivee(),
+                utilisateurDao.findById(entity.getIdDriver()).orElseThrow(UserNotFoundException::new),
+                utilisateurDao.findById(entity.getIdPassager()).orElseThrow(UserNotFoundException::new));
 
         return getListingDTO(courseDao.saveAndFlush(course));
 
     }
 
+    public Iterable<HistoriqueCourseDTO> findAllHistoriqueCourse() {
+        Iterable<HistoriqueCourseDTO> hists = courseDao.findAll().stream().map(this::convertToDtoHistCourse)
+                .collect(Collectors.toList());
+        return hists;
+    }
+
+    public Iterable<HistoriqueCourseDTO> findHistByDriver(Long cin) {
+        Utilisateur driver = utilisateurDao.findById(cin).orElseThrow(UserNotFoundException::new);
+        Iterable<HistoriqueCourseDTO> hists = courseDao.findByDriver(driver).stream().map(this::convertToDtoHistCourse)
+                .collect(Collectors.toList());
+        return hists;
+    }
+
+    public Iterable<HistoriqueCourseDTO> findHistByPassager(Long cin) {
+        Utilisateur driver = utilisateurDao.findById(cin).orElseThrow(UserNotFoundException::new);
+        Iterable<HistoriqueCourseDTO> hists = courseDao.findByPassager(driver).stream()
+                .map(this::convertToDtoHistCourse).collect(Collectors.toList());
+        return hists;
+    }
+
     private CourseListingDTO getListingDTO(Course entity) {
-        return new CourseListingDTO(entity.getId(), entity.getDateCourse(), entity.getDistance(),
-                entity.getDepart(), entity.getArrivee(), entity.getPassager(), entity.getDriver());
+        return new CourseListingDTO(entity.getId(), entity.getDateCourse(), entity.getDistance(), entity.getDepart(),
+                entity.getArrivee(), entity.getPassager(), entity.getDriver());
     }
 
     public Iterable<DriverOnLineListingDTO> getDriversOnLine() {
@@ -73,17 +90,20 @@ public class CourseService {
             return result;
         };
 
-
         List<DriverOnLineListingDTO> onLineListingDTOs = utilisateurDao.findAll().stream()
-                .filter((item) -> item.getTypeUtilisateur().equals(TypeUtilisateur.chauffeur)
-                        && item.getIsOnLine())
+                .filter((item) -> item.getTypeUtilisateur().equals(TypeUtilisateur.chauffeur) && item.getIsOnLine())
                 .map((item) -> new DriverOnLineListingDTO(item.getCin(), item.getNom(),
-                        getRating.apply(item.getAvis().stream().collect(Collectors.toList())), 30.2,
-                        "Mercedes"))
+                        getRating.apply(item.getAvis().stream().collect(Collectors.toList())), 30.2, "Mercedes"))
                 .collect(Collectors.toList());
         return onLineListingDTOs;
     }
 
-
+    private HistoriqueCourseDTO convertToDtoHistCourse(Course course) {
+        HistoriqueCourseDTO h = new HistoriqueCourseDTO();
+        modelMapper.map(course, h);
+        h.setNomDriver(course.getDriver().getNom());
+        h.setNomPassager(course.getPassager().getNom());
+        return h;
+    }
 
 }

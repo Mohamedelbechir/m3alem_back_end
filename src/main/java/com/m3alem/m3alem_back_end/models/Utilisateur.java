@@ -1,7 +1,6 @@
 package com.m3alem.m3alem_back_end.models;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -9,21 +8,16 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.m3alem.utils.EtatCompte;
 
-import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 /**
@@ -43,9 +37,13 @@ public class Utilisateur {
     @NotNull
     private String prenom;
 
-   /* @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")*/
+    /*
+     * @Temporal(TemporalType.TIMESTAMP)
+     * 
+     * @DateTimeFormat(pattern = "yyyy-MM-dd")
+     * 
+     * @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+     */
     private LocalDateTime dateNaissance;
     // private Date dateNaissance;
 
@@ -60,22 +58,24 @@ public class Utilisateur {
     @NotEmpty
     private String typeUtilisateur;
     private String etatInscription;
-    private String etatCompte;
+    private String etatCompte = EtatCompte.COMPTE_ACTIVATED;
 
-    //@Temporal(TemporalType.TIMESTAMP)
-    /*@DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")*/
-    private LocalDateTime dateDemande =  LocalDateTime.now();    
-    
+    // @Temporal(TemporalType.TIMESTAMP)
+    /*
+     * @DateTimeFormat(pattern = "yyyy-MM-dd")
+     * 
+     * @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+     */
+    private LocalDateTime dateDemande = LocalDateTime.now();
+
     // @Column( nullable = false,columnDefinition = "boolean default false")
-    private Boolean  isOnLine = false;
+    private Boolean isOnLine = false;
 
     @OneToMany
     private Set<Avis> avis;
 
     @OneToOne
     private CarteCredit carteCredit;
-
 
     @Lob
     @Column(columnDefinition = "LONGBLOB")

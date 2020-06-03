@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 public interface UtilisateurDao extends JpaRepository<Utilisateur, Long> {
 
     Utilisateur findByCinAndPassword(Long cin, String password);
-    Utilisateur findById(long id);
     List<Utilisateur> findBytypeUtilisateur(String typeUtilisateur);
     // void update(Utilisateur currentUtilisateur);
 

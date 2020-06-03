@@ -46,11 +46,20 @@ public class UtilisateurService {
         return convertToDto(utilisateur);
     }
 
-    public UtilisateurListingDTO login(Long cin, String password) {
+    public DriverListingDTO update(DriverListingDTO driverListingDTO) {
+        Utilisateur utilisateur = utilisateurDao.findById(driverListingDTO.getCin())
+                .orElseThrow(UserNotFoundException::new);
+        modelMapper.map(driverListingDTO, utilisateur);
+        utilisateurDao.save(utilisateur);
+        return convertToDrivreListingDto(utilisateur);
+    }
+
+    public Utilisateur login(Long cin, String password) {
         final Utilisateur utilisateur = utilisateurDao.findByCinAndPassword(cin, password);
         if (utilisateur == null)
             throw new AuthentificationException("Utilisateur avec le cin : " + cin + " est introuvable");
-        return convertToDto(utilisateur);
+        //return convertToDto(utilisateur);
+        return utilisateur;
     }
 
     public Iterable<UtilisateurListingDTO> findAll() {
