@@ -12,6 +12,4 @@ public class CodeImage {
      public static final String PHOTO_PIECE_IDENTITE = "CODE_PHOTO_PHOTO_IDENTITE";
      public static final String PHOTO_IDENTITE = "CODE_PHOTO_IDENTITE";
 
-     public CodeImage() {
-     }
 }
